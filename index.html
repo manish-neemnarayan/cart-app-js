@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body >
+
+    <!-- cart block -->
+    <div id="cart" class="absolute hidden right-0 z-10 flex justify-between md:justify-center md:gap-12 text-xs md:text-base bg-red-50">
+        <button id="cross" class="absolute top-0 right-0 text-sm rounded-full p-2 bg-black font-bold">❌</button>
+        <div id="cart-container" class="overflow-y-scroll h-96 md:w-['30rem'] w-2/3">
+            <!-- cart items will be here dynamically by js -->
+        </div>
+        
+        <div class=" p-4 shadow-xl rounded mr-4 mt-4 bg-yellow-200 w-32 md:w-72 md:h-72 h-64 inline-block">
+            <h3 class="font-bold text-violet-600">Subtotal: <span id="subtotal" class="md:ml-4"></span></h3>
+            <h3 class="font-bold text-blue-600 shadow bg-gray-100 px-2 rounded mt-4 mx-auto w-full">Checkout Now</h3>
+            <h3 class="font-bold text-blue-600 shadow bg-gray-100 px-2 rounded mt-4 mx-auto w-full">Pay Online</h3>
+            <h3 class="font-semibold text-gray-400 shadow bg-red-100 px-2 rounded mt-4 mx-auto w-full">OR</h3>
+            <h3 class="font-bold text-blue-600 shadow bg-gray-100 px-2 rounded mt-4 mx-auto w-full">Cash On Delivery</h3>
+        </div>
+    </div>
+    <!-- ending cart block -->
+
+
+    <section id="page" class="h-screen bg-gray-100">
+        <!--Start header containing cart button and heading -->
+        <header class="flex px-8 justify-between items-center bg-red-100">
+            <h1 class="text-4xl font-mono font-semibold text-gray-600">Shopping App</h1>
+            <button id="show-cart" class="rounded-xl text-2xl bg-green-100 text-blue-500 font-semibold px-4 ">Cart 🛒</button>
+        </header>
+        <!--Ending header containing cart button and heading -->
+
+        <!--Start sidebar navigation for filtering -->
+        <nav class="bg-red-200 text-sm">
+
+            <!-- Start Color filter -->
+            <div class="flex flex-col justify-center items-between h-44">
+                <h3 class="text-xl p-2  font-bold text-green-700">Color :</h3>
+            
+                <div class="flex text-gray-500 px-12 items-center justify-between">
+                    <label for="color1">Black</label>
+                    <input type="checkbox" id="color1" name="color" data-color="Black" >
+                </div>
+                <div class="flex text-gray-500 px-12 items-center justify-between">
+                    <label for="color2">White</label>
+                    <input type="checkbox" id="color2" name="color" data-color="White" >
+                </div>
+                <div class="flex text-gray-500 px-12 items-center justify-between">
+                    <label for="color3">Blue</label>
+                    <input type="checkbox" id="color3" name="color" data-color="Blue" >
+                </div>
+            </div>
+            <!-- Ending Color filter -->
+
+            <!-- Start Size filter -->
+            <div class="flex flex-col justify-center items-between h-32 px-2">
+                <h3 class="text-xl p-2  font-bold text-green-700">Size :</h3>
+                <input id="size-range" type="range" step="1" min="6" max="11" value="8" class="mx-2" >
+                <span id="size-container" class="bg-blue-200 my-2  w-full h-8 text-2xl font-bold font-mono rounded-xl flex justify-center items-center">8</span>
+            </div>
+            <!-- Ending Size filter -->
+
+
+            <!-- Start Price filter -->
+            <div class="flex flex-col justify-center items-between h-32">
+                <h3 class="text-xl p-2  font-bold text-green-700">Price :</h3>
+                <div class="flex text-gray-500 px-2 items-center justify-between">
+                    <label for="priceLowtoHigh">Price Low to High</label>
+                    <input type="radio" id="priceLowtoHigh" name="price" value="lth" >
+                </div>
+                <div class="flex text-gray-500 px-2 items-center justify-between">
+                    <label for="priceHightoLow">Price High to Low</label>
+                    <input type="radio" id="priceHightoLow" name="price" value="htl" >
+                </div>
+            </div>
+            <!-- Ending Price filter -->
+            <button id="apply-btn" class="rounded  px-4  bg-violet-200 font-bold">Apply Filters</button>
+
+        </nav>
+        <!--Ending sidebar navigation for filtering -->
+
+
+        <!--Start showing product items -->
+        <main class="bg-green-200">
+            <section class="text-gray-600 body-font">
+                <div class="container px-5 py-24 mx-auto">
+                  <div id="item-container" class="flex flex-wrap -m-4">
+                   <!-- Dynamically adding products from js -->
+                  </div>
+                </div>
+              </section>
+        </main>
+        <!--Ending showing product items -->
+
+      </section> 
+
+
+      <script src="./script.js"></script>
+</body>
+</html>

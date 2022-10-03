@@ -1,0 +1,21 @@
+
+
+#page {
+    display: grid;
+    grid-template-columns:150px 1fr 1fr;
+    grid-template-rows: 100px 1fr;
+    grid-template-areas: "head head head"
+                         "nav main main"
+}
+
+header {
+    grid-area: head;
+}
+
+nav {
+    grid-area: nav;
+}
+
+main {
+    grid-area: main;
+}

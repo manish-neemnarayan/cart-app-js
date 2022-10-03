@@ -128,7 +128,7 @@ const price = document.querySelectorAll("input[type=radio]");
 const size = document.querySelector("#size-range");
 
 let showColorsArr = []; //having color filters elements
-let sizeNum = ""; //having size number
+let sizeNum = 8; //having size number
 let priceVal = "";
 
 show(data); // showing each & every item on first load
@@ -175,7 +175,8 @@ size.addEventListener("change", () => {
 applyBtn.addEventListener('click', () => {
     itemsContainer.innerHTML = "";
     let arrToFilter = showColorsArr.length === 0 ? data : showColorsArr;
-    let arrItems = arrToFilter.filter(item => item.size === sizeNum);
+    let arrItems = arrToFilter.filter(item => item.size == sizeNum);
+    console.log(showColorsArr)
     
     if(priceVal === "lth") {
         arrItems.sort((a, b) => a.price - b.price);
@@ -264,7 +265,6 @@ btns.forEach(btn => {
 
                 // subtotal cart
                 total = 0;
-                console.clear()
                 subtotalCart.forEach(item => {
                     change = item.changePrice;
                 })
@@ -290,23 +290,19 @@ btns.forEach(btn => {
             item.addEventListener("click", (e) => {
                 let arr = Array.from(cartAll).filter(item => item.id === e.target.parentNode.parentNode.id)
                 arr.forEach(item => {
-                    console.clear()
                     if(item.querySelector("#qty").textContent >= 2) {
                         item.querySelector("#qty").textContent = Number(item.querySelector("#qty").textContent) - 1; 
                     }
                 })
                 // subtotal cart
                 total = 0;
-                console.clear()
                 subtotalCart.forEach(item => {
                     change = item.changePrice;
                 })
 
                 subtotalCart.forEach((item) => {
-                    console.log(e.target.parentNode.querySelector("#qty"));
                     if( item.id == e.target.parentNode.parentNode.id){
                         change = item.changePrice * Number(e.target.parentNode.querySelector("#qty").textContent) ;
-                        console.log(change)
                         item.itemPrice = change;
                         
                         }

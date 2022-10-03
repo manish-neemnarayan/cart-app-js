@@ -128,8 +128,143 @@ const price = document.querySelectorAll("input[type=radio]");
 const size = document.querySelector("#size-range");
 
 let showColorsArr = []; //having color filters elements
-let sizeNum = 8; //having size number
+let sizeNum = 6; //having size number
 let priceVal = "";
+
+// cart app
+let subtotalCart = []; //for containing the total price
+
+function cartApplying() {
+    const btns = itemsContainer.querySelectorAll("button");
+    const cartContainer = document.querySelector("#cart-container");
+    const cross = document.querySelector("#cross");
+    const cart = document.querySelector("#cart");
+    const showCart = document.querySelector("#show-cart");
+    
+    const subtotal = document.querySelector("#subtotal");
+    // const plus = document.querySelector("#plus");
+    // const minus = document.querySelector("#minus");
+    // const qty = document.querySelector("#qty");
+    
+    cross.addEventListener("click", () => {
+        cart.style.display = "none";
+    })
+    
+    showCart.addEventListener("click", () => {
+        cart.style.display = "flex";
+    })
+    
+    let ele = [];
+    
+    btns.forEach(btn => {
+    
+        btn.addEventListener('click', function(e) {
+            e.target.disabled = true;
+            ele.push(...data.filter(item => String(item.id) === e.target.parentNode.parentNode.id));
+            let showCartItems = [];
+            let arrId = ele.map(item => item.id)
+            arrId.forEach(( _ , index) => {
+                showCartItems = data.filter((item,  _ ) => item.id === arrId[index])
+            })
+    
+             showCartItems.forEach((item) => {
+                subtotalCart.push({             // this line of code is useful later for calculating the total
+                    id : item.id,
+                    changePrice : item.price,
+                    itemPrice : item.price
+                })
+                
+                cartContainer.innerHTML += `<section class="p-2 flex bg-blue-200 w-full mt-4  rounded">
+            <a class="block relative h-32 rounded overflow-hidden">
+                <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="${item.src}">
+            </a>
+            <div id="${item.id}" data-select="price-modify" class="w-4/6 rounded flex flex-col items-center justify-between">
+                <p class="flex justify-center items-center gap-8">
+                    <span>Size: ${item.size}</span>
+                    <span>Color: ${item.color}</span>
+                </p>
+                <p class="text-xl font-bold">Price: ${item.price}</p>
+                <div class="flex justify-center gap-8 items-center w-32 md:w-2/3 bg-green-200">
+                    <button id="plus">+</button>
+                    <span>QTY: <span id="qty">1</span></span>
+                    <button id="minus">−</button>
+                </div>
+            </div>
+        </section>`;
+            })
+    
+            // starts changing quantity of items
+            let total = 0;
+            let cartAll = document.querySelectorAll("[data-select='price-modify']");
+            let change = [];
+    
+            // plus button
+            document.querySelectorAll("#plus").forEach(item => {
+                item.addEventListener("click", (e) => {
+                    let arr = Array.from(cartAll).filter(item => item.id === e.target.parentNode.parentNode.id)
+                    arr.forEach(item => {
+                        item.querySelector("#qty").textContent = Number(item.querySelector("#qty").textContent) + 1; 
+                    })
+    
+                    // subtotal cart
+                    total = 0;
+                    subtotalCart.forEach(item => {
+                        change = item.changePrice;
+                    })
+    
+                    subtotalCart.forEach((item) => {
+                        if( item.id == e.target.parentNode.parentNode.id){
+                            change = item.changePrice * Number(e.target.parentNode.querySelector("#qty").textContent) ;
+                            item.itemPrice = change;
+                            }
+                    });
+                    subtotalCart.forEach(item => {
+                        total += item.itemPrice;
+                    })
+                    subtotal.textContent = total;
+            })
+            })
+    
+            // minus button
+            document.querySelectorAll("#minus").forEach(item => {
+                item.addEventListener("click", (e) => {
+                    let arr = Array.from(cartAll).filter(item => item.id === e.target.parentNode.parentNode.id)
+                    arr.forEach(item => {
+                        if(item.querySelector("#qty").textContent >= 2) {
+                            item.querySelector("#qty").textContent = Number(item.querySelector("#qty").textContent) - 1; 
+                        }
+                    })
+                    // subtotal cart
+                    total = 0;
+                    subtotalCart.forEach(item => {
+                        change = item.changePrice;
+                    })
+    
+                    subtotalCart.forEach((item) => {
+                        if( item.id == e.target.parentNode.parentNode.id){
+                            change = item.changePrice * Number(e.target.parentNode.querySelector("#qty").textContent) ;
+                            item.itemPrice = change;
+                            
+                            }
+                    });
+                    subtotalCart.forEach(item => {
+                        total += item.itemPrice;
+                    })
+                    subtotal.textContent = total;
+                })
+            })
+            
+    
+            subtotalCart.forEach(item => {
+                total += item.itemPrice;
+            })
+            
+            subtotal.textContent = total;
+    
+        })
+        
+    })
+}
 
 show(data); // showing each & every item on first load
 
@@ -176,7 +311,6 @@ applyBtn.addEventListener('click', () => {
     itemsContainer.innerHTML = "";
     let arrToFilter = showColorsArr.length === 0 ? data : showColorsArr;
     let arrItems = arrToFilter.filter(item => item.size == sizeNum);
-    console.log(showColorsArr)
     
     if(priceVal === "lth") {
         arrItems.sort((a, b) => a.price - b.price);
@@ -185,143 +319,11 @@ applyBtn.addEventListener('click', () => {
     }
 
     show(arrItems);
+    cartApplying();
 })
 
 
 // cart app-----------------------------------------------------------------------------------------------------
 
-const btns = itemsContainer.querySelectorAll("button");
-const cartContainer = document.querySelector("#cart-container");
-const cross = document.querySelector("#cross");
-const cart = document.querySelector("#cart");
-const showCart = document.querySelector("#show-cart");
 
-const subtotal = document.querySelector("#subtotal");
-// const plus = document.querySelector("#plus");
-// const minus = document.querySelector("#minus");
-// const qty = document.querySelector("#qty");
-
-cross.addEventListener("click", () => {
-    cart.style.display = "none";
-})
-
-showCart.addEventListener("click", () => {
-    cart.style.display = "flex";
-})
-
-let ele = [];
-let subtotalCart = []; //for containing the total price
-
-btns.forEach(btn => {
-
-    btn.addEventListener('click', function(e) {
-        ele.push(...data.filter(item => String(item.id) === e.target.parentNode.parentNode.id));
-        let showCartItems = [];
-        let arrId = ele.map(item => item.id)
-        arrId.forEach(( _ , index) => {
-            showCartItems = data.filter((item,  _ ) => item.id === arrId[index])
-        })
-
-         showCartItems.forEach((item) => {
-            subtotalCart.push({             // this line of code is useful later for calculating the total
-                id : item.id,
-                changePrice : item.price,
-                itemPrice : item.price
-            })
-            
-            cartContainer.innerHTML += `<section class="p-2 flex bg-blue-200 w-full mt-4  rounded">
-        <a class="block relative h-32 rounded overflow-hidden">
-            <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="${item.src}">
-        </a>
-        <div id="${item.id}" data-select="price-modify" class="w-4/6 rounded flex flex-col items-center justify-between">
-            <p class="flex justify-center items-center gap-8">
-                <span>Size: ${item.size}</span>
-                <span>Color: ${item.color}</span>
-            </p>
-            <p class="text-xl font-bold">Price: ${item.price}</p>
-            <div class="flex justify-center gap-8 items-center w-32 md:w-2/3 bg-green-200">
-                <button id="plus">+</button>
-                <span>QTY: <span id="qty">1</span></span>
-                <button id="minus">−</button>
-            </div>
-        </div>
-    </section>`;
-        })
-
-        // starts changing quantity of items
-        let qty = document.querySelectorAll("#qty");
-        let total = 0;
-        let cartAll = document.querySelectorAll("[data-select='price-modify']");
-        let change = [];
-
-        // plus button
-        document.querySelectorAll("#plus").forEach(item => {
-            item.addEventListener("click", (e) => {
-                let arr = Array.from(cartAll).filter(item => item.id === e.target.parentNode.parentNode.id)
-                arr.forEach(item => {
-                    console.clear()
-                    item.querySelector("#qty").textContent = Number(item.querySelector("#qty").textContent) + 1; 
-                })
-
-                // subtotal cart
-                total = 0;
-                subtotalCart.forEach(item => {
-                    change = item.changePrice;
-                })
-
-                subtotalCart.forEach((item) => {
-                    console.log(e.target.parentNode.querySelector("#qty"));
-                    if( item.id == e.target.parentNode.parentNode.id){
-                        change = item.changePrice * Number(e.target.parentNode.querySelector("#qty").textContent) ;
-                        console.log(change)
-                        item.itemPrice = change;
-                        
-                        }
-                });
-                subtotalCart.forEach(item => {
-                    total += item.itemPrice;
-                })
-                subtotal.textContent = total;
-        })
-        })
-
-        // minus button
-        document.querySelectorAll("#minus").forEach(item => {
-            item.addEventListener("click", (e) => {
-                let arr = Array.from(cartAll).filter(item => item.id === e.target.parentNode.parentNode.id)
-                arr.forEach(item => {
-                    if(item.querySelector("#qty").textContent >= 2) {
-                        item.querySelector("#qty").textContent = Number(item.querySelector("#qty").textContent) - 1; 
-                    }
-                })
-                // subtotal cart
-                total = 0;
-                subtotalCart.forEach(item => {
-                    change = item.changePrice;
-                })
-
-                subtotalCart.forEach((item) => {
-                    if( item.id == e.target.parentNode.parentNode.id){
-                        change = item.changePrice * Number(e.target.parentNode.querySelector("#qty").textContent) ;
-                        item.itemPrice = change;
-                        
-                        }
-                });
-                subtotalCart.forEach(item => {
-                    total += item.itemPrice;
-                })
-                subtotal.textContent = total;
-            })
-        })
-        
-
-        subtotalCart.forEach(item => {
-            total += item.itemPrice;
-        })
-        
-        subtotal.textContent = total;
-
-    })
-    
-})
-
+cartApplying();
